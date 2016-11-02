@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
+// projectListCmd represents the list command
+var projectListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "list project",
 	Long:  `list the project related to you`,
@@ -40,7 +40,6 @@ var listCmd = &cobra.Command{
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"ID", "Name", "Type", "Project Number"})
 		table.SetBorder(false)
-		table.SetCenterSeparator(" ")
 		for _, v := range data {
 			table.Append(v)
 		}
@@ -49,5 +48,5 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	projectCmd.AddCommand(listCmd)
+	projectCmd.AddCommand(projectListCmd)
 }
