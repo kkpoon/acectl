@@ -2,6 +2,10 @@
 
 ## Install
 
+### Download Binary
+
+You could download binary from github [release page](https://github.com/kkpoon/acectl/releases)
+
 ### Build It Yourself
 
 You have to install golang v1.7 or above
