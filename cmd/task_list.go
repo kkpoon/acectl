@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
+	"text/tabwriter"
 
 	aceproject "github.com/kkpoon/go-aceproject"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -36,25 +35,12 @@ var taskListCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		data := [][]string{}
-		for _, i := range tasks {
-			data = append(data, []string{
-				strconv.Itoa(i.ID),
-				fmt.Sprintf("%.25s", i.Name),
-				i.TaskGroupName,
-				strconv.Itoa(i.ProjectID),
-				i.ProjectName,
-			})
+		w := tabwriter.NewWriter(os.Stdout, 0, 8, 1, '\t', 0)
+		fmt.Fprintf(w, "ID\tProject Name\tTask Type\tTask Name\n")
+		for _, t := range tasks {
+			fmt.Fprintf(w, "%d\t%s\t%s\t%s\n", t.ID, t.ProjectName, t.TaskGroupName, t.Name)
 		}
-
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "Name", "Type", "P_ID", "Project Name"})
-		table.SetBorder(false)
-		table.SetAutoWrapText(true)
-		for _, v := range data {
-			table.Append(v)
-		}
-		table.Render()
+		w.Flush()
 	},
 }
 

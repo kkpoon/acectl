@@ -32,7 +32,10 @@ $ acectl login
 # list the task belongs to you, find the task id of your task
 $ acectl task list
 # Log time to timesheet on task id=12345, mon=8, tue=8..., sat=0, sun=0
-$ acectl timesheet input -t 12345 --hours 8,8,8,8,8,0,0
+$ acectl timesheet input --hours 8,8,8,8,8,0,0 -t 12345
+saved at Timesheet Line ID: 7689
+# oh no, the time is not correct, lets update it
+$ acectl timesheet input --hours 0,7,0,0,0,0,0 -t 12345 -u 7689
 ```
 
 ### More usage

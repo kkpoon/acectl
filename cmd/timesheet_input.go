@@ -26,7 +26,7 @@ var timesheetInputCmd = &cobra.Command{
 		hours := [7]float64{}
 		hoursStr := strings.Split(viper.GetString("hours"), ",")
 		if len(hoursStr) != 7 {
-			fmt.Printf("invalid format in `hours` parameter")
+			fmt.Printf("invalid format in `hours` parameter\n")
 			os.Exit(1)
 		} else {
 			for i, v := range hoursStr {
@@ -40,7 +40,7 @@ var timesheetInputCmd = &cobra.Command{
 		if weekStartStr := viper.GetString("date"); weekStartStr != "" {
 			inputDate, err := time.Parse("2006-01-02", weekStartStr)
 			if err != nil {
-				fmt.Printf("invalid format in `date` parameter")
+				fmt.Printf("invalid format in `date` parameter\n")
 				os.Exit(1)
 			}
 			weekStart = inputDate
@@ -61,33 +61,40 @@ var timesheetInputCmd = &cobra.Command{
 
 		taskID := viper.GetInt64("taskid")
 		if taskID == 0 {
-			fmt.Printf("invalid `taskid` parameter")
+			fmt.Printf("invalid `taskid` parameter\n")
 			os.Exit(1)
 		}
 
 		comments := viper.GetString("comments")
 
-		workItem := aceproject.SaveWorkItem{
-			WeekStart:  weekStart.Format("2006-01-02"),
-			TaskID:     taskID,
-			TimeTypeID: timeType,
-			HoursDay1:  hours[0],
-			HoursDay2:  hours[1],
-			HoursDay3:  hours[2],
-			HoursDay4:  hours[3],
-			HoursDay5:  hours[4],
-			HoursDay6:  hours[5],
-			HoursDay7:  hours[6],
-			Comments:   &comments,
+		var timesheetLineID *int64
+		update := viper.GetInt64("update")
+		if update != 0 {
+			timesheetLineID = &update
 		}
 
-		_, err := timesheetSvc.SaveWorkItem(&workItem)
+		workItem := aceproject.SaveWorkItem{
+			TimesheetLineID: timesheetLineID,
+			WeekStart:       weekStart.Format("2006-01-02"),
+			TaskID:          taskID,
+			TimeTypeID:      timeType,
+			HoursDay1:       hours[0],
+			HoursDay2:       hours[1],
+			HoursDay3:       hours[2],
+			HoursDay4:       hours[3],
+			HoursDay5:       hours[4],
+			HoursDay6:       hours[5],
+			HoursDay7:       hours[6],
+			Comments:        &comments,
+		}
+
+		savedTimeItem, _, err := timesheetSvc.SaveWorkItem(&workItem)
 
 		if err != nil {
 			fmt.Printf("save work item error: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Println("saved")
+		fmt.Printf("saved at Timesheet Line ID: %d\n", *savedTimeItem.TimesheetLineID)
 	},
 }
 
@@ -98,9 +105,11 @@ func init() {
 	timesheetInputCmd.Flags().StringP("timetype", "", "regular", "the type of the time to log, regular/training/overtime")
 	timesheetInputCmd.Flags().StringP("comments", "c", "", "comments of this log entry")
 	timesheetInputCmd.Flags().StringP("hours", "", "0,0,0,0,0,0,0", "7-days hours represent in comma separated format")
+	timesheetInputCmd.Flags().Int64P("update", "u", 0, "update Timesheet Line ID entry")
 	viper.BindPFlag("date", timesheetInputCmd.Flags().Lookup("date"))
 	viper.BindPFlag("taskid", timesheetInputCmd.Flags().Lookup("taskid"))
 	viper.BindPFlag("timetype", timesheetInputCmd.Flags().Lookup("timetype"))
 	viper.BindPFlag("comments", timesheetInputCmd.Flags().Lookup("comments"))
 	viper.BindPFlag("hours", timesheetInputCmd.Flags().Lookup("hours"))
+	viper.BindPFlag("update", timesheetInputCmd.Flags().Lookup("update"))
 }
