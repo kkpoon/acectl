@@ -11,6 +11,7 @@ You could download binary from github [release page](https://github.com/kkpoon/a
 You have to install golang v1.7 or above
 
 ```shell
+$ go get -u -v github.com/kkpoon/acectl
 $ go install github.com/kkpoon/acectl
 $ acectl help
 ```
