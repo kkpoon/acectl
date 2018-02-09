@@ -4,7 +4,7 @@
 
 ### Download Binary
 
-You could download binary from github [release page](https://github.com/kkpoon/acectl/releases)
+You could download binary from github [release page](https://github.com/clustertech-dev/acectl/releases)
 
 ### Build It Yourself
 
