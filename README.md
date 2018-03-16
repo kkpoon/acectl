@@ -1,5 +1,8 @@
 # acectl - ACE Project command line control
 
+[![Github All Releases](https://img.shields.io/github/downloads/kkpoon/acectl/total.svg)](https://github.com/kkpoon/acectl/releases)
+[![GitHub (pre-)release](https://img.shields.io/github/release/kkpoon/acectl/all.svg)](https://github.com/kkpoon/acectl/releases)
+
 ## Install
 
 ### Download Binary
@@ -8,12 +11,13 @@ You could download binary from github [release page](https://github.com/clustert
 
 ### Build It Yourself
 
-You have to install golang v1.7 or above
+1. You have to install [golang](https://golang.org)
+2. Install [dep](https://github.com/golang/dep)
 
 ```shell
-$ go get -u -v github.com/kkpoon/acectl
-$ go install github.com/kkpoon/acectl
-$ acectl help
+$ dep ensure
+$ go build
+$ ./acectl help
 ```
 
 ## usage
